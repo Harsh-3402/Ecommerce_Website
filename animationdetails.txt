@@ -1,0 +1,29 @@
+| Library               | Main purpose        | What we can use it for                                              |
+| --------------------- | ------------------- | ------------------------------------------------------------------- |
+| **Motion**            | Animations          | Page transitions, product cards, buttons, modals, scroll animations |
+| **Swiper**            | Sliders/carousels   | Hero slider, product image slider, featured products                |
+| **shadcn/ui**         | UI components       | Dialogs, dropdowns, tabs, tooltips, forms, sheets                   |
+| **Lucide React**      | Icons               | Cart, search, user, heart, arrows, check, menu                      |
+| **Sonner**            | Toast notifications | "Added to cart", "Order placed", "Login successful"                 |
+| **React Hook Form**   | Forms               | Login, signup, checkout, address forms                              |
+| **Zod**               | Validation          | Cleaner form validation                                             |
+| **Lenis**             | Smooth scrolling    | Premium smooth page scrolling                                       |
+| **GSAP**              | Advanced animation  | Complex hero/landing animations                                     |
+| **React Three Fiber** | 3D                  | 3D product/hero effects — optional                                  |
+| **TanStack Query**    | Server state        | Better API fetching, caching, refetching                            |
+| **Zustand**           | Global state        | Cart/user/UI state if needed later                                  |
+
+
+| Page               | Motion functionality                  |
+| ------------------ | ------------------------------------- |
+| 🏠 Home            | Hero entrance + stagger sections      |
+| 🛍️ Products       | **Stagger product cards** ✅           |
+| 📦 Product Details | Image + information slide/fade        |
+| 🛒 Cart            | Cart items stagger + remove animation |
+| 📍 Checkout        | Form sections fade/slide              |
+| 📋 Order Review    | Address → products → summary stagger  |
+| 💳 Payment         | Payment options animate on selection  |
+| ✅ Order Success    | Success icon pop + content stagger    |
+| 🔐 Login           | Form entrance                         |
+| 📝 Signup          | Form entrance                         |
+| 🧭 Navbar          | Mobile menu / dropdown animation      |
