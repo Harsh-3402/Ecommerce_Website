@@ -8,7 +8,7 @@ const orderRoutes = require("./routes/orderRoutes");
 app = express();
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://ecommerce-website-zeta-ashy-25.vercel.app",
     credentials: true
 })); // middleware to enable CORS
 app.use(express.json()); // middleware to parse JSON request bodies
