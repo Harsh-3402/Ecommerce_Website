@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://ecommerce-website-ara9.onrender.com/api",
   withCredentials: true, // Include cookies in requests
 });
 
