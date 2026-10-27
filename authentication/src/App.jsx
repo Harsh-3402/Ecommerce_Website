@@ -8,8 +8,12 @@ import Checkout from "./pages/Checkout";
 import Order from "./pages/Order";
 import Payment from "./pages/Payment";
 import OrderSuccess from "./pages/OrderSuccess";
+import MyOrders from "./pages/MyOrders";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 import PageTransition from "./components/PageTransition";
+import MainLayout from "./components/layout/MainLayout";
 
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "motion/react";
@@ -17,19 +21,23 @@ import { AnimatePresence } from "motion/react";
 function App() {
   const location = useLocation();
 
+  // Common layout containing the existing Header and Footer
+  const withLayout = (page) => <MainLayout>{page}</MainLayout>;
+
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        
+        {/* Home */}
         <Route
           path="/"
           element={
             <PageTransition>
-              <Home />
+              {withLayout(<Home />)}
             </PageTransition>
           }
         />
 
+        {/* Authentication */}
         <Route
           path="/signup"
           element={
@@ -48,11 +56,12 @@ function App() {
           }
         />
 
+        {/* Products */}
         <Route
           path="/products"
           element={
             <PageTransition>
-              <Products />
+              {withLayout(<Products />)}
             </PageTransition>
           }
         />
@@ -61,59 +70,93 @@ function App() {
           path="/products/:id"
           element={
             <PageTransition>
-              <ProductDetails />
+              {withLayout(<ProductDetails />)}
             </PageTransition>
           }
         />
 
+        {/* Cart */}
         <Route
           path="/cart"
           element={
             <PageTransition>
-              <Cart />
+              {withLayout(<Cart />)}
             </PageTransition>
           }
         />
 
+        {/* About Us */}
+        <Route
+          path="/about"
+          element={
+            <PageTransition>
+              {withLayout(<About />)}
+            </PageTransition>
+          }
+        />
+
+        {/* Contact Us */}
+        <Route
+          path="/contact"
+          element={
+            <PageTransition>
+              {withLayout(<Contact />)}
+            </PageTransition>
+          }
+        />
+
+        {/* Checkout */}
         <Route
           path="/checkout"
           element={
             <PageTransition>
-              <Checkout />
+              {withLayout(<Checkout />)}
             </PageTransition>
           }
         />
 
+        {/* Order Review */}
         <Route
           path="/order"
           element={
             <PageTransition>
-              <Order />
+              {withLayout(<Order />)}
             </PageTransition>
           }
         />
 
+        {/* Payment */}
         <Route
           path="/payment"
           element={
             <PageTransition>
-              <Payment />
+              {withLayout(<Payment />)}
             </PageTransition>
           }
         />
 
+        {/* Order Success */}
         <Route
           path="/ordersuccess"
           element={
             <PageTransition>
-              <OrderSuccess />
+              {withLayout(<OrderSuccess />)}
             </PageTransition>
           }
         />
 
+        {/* My Orders */}
+        <Route
+          path="/my-orders"
+          element={
+            <PageTransition>
+              {withLayout(<MyOrders />)}
+            </PageTransition>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );
 }
 
-export default App; 
+export default App;

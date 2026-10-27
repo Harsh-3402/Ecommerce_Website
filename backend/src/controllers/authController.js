@@ -106,6 +106,7 @@ const loginController = asyncHandler(async (req, res) => {
     res.status(200).json({
         success: true,
         message: "Login successful",
+        token,
         user: {
             _id: user._id,
             name: user.name,
@@ -114,7 +115,32 @@ const loginController = asyncHandler(async (req, res) => {
     });
 });
 
+
+// Logout User
+const logoutController = asyncHandler(async (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+    });
+
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully",
+    });
+});
+
+const getCurrentUserController = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+});
+
+
 module.exports = {
     registerController,
     loginController,
+    logoutController,
+  getCurrentUserController,
 };

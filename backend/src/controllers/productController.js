@@ -3,62 +3,125 @@ const asyncHandler = require("../utils/asyncHandler");
 const cloudinary = require("../config/cloudinary");
 
 // Create Product
+// Create Product
 const createProduct = asyncHandler(async (req, res) => {
-
-
     const {
         title,
         description,
         price,
         category,
         stock,
+        imageUrl,
     } = req.body;
 
-    // Required fields
-    if (!title || !description || !price || !category || stock === undefined) {
-        const error = new Error("All fields are required");
+    // Validate required fields
+    if (
+        !title?.trim() ||
+        !description?.trim() ||
+        price === undefined ||
+        price === "" ||
+        !category?.trim() ||
+        stock === undefined ||
+        stock === ""
+    ) {
+        const error = new Error(
+            "Title, description, price, category and stock are required"
+        );
         error.statusCode = 400;
-        console.log("BODY:", req.body);
-        console.log("FILE:", req.file);
         throw error;
     }
 
-
-    // Validate numbers
-    if (Number(price) <= 0) {
+    // Validate price
+    if (!Number.isFinite(Number(price)) || Number(price) <= 0) {
         const error = new Error("Price must be greater than 0");
         error.statusCode = 400;
         throw error;
     }
 
-    if (Number(stock) < 0) {
-        const error = new Error("Stock cannot be negative");
+    // Validate stock
+    if (!Number.isInteger(Number(stock)) || Number(stock) < 0) {
+        const error = new Error(
+            "Stock must be a non-negative integer"
+        );
         error.statusCode = 400;
         throw error;
     }
 
-    // Image validation
-    if (!req.file) {
-        const error = new Error("Product image is required");
+    let image = {
+        url: "",
+        public_id: "",
+    };
+
+    // Method 1: Upload a file to Cloudinary
+    if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: "E-commerce-products",
+        });
+
+        image = {
+            url: result.secure_url,
+            public_id: result.public_id,
+        };
+    }
+
+    // Method 2: Use an existing image URL
+    else if (imageUrl) {
+        let parsedUrl;
+
+        try {
+            parsedUrl = new URL(imageUrl);
+        } catch {
+            const error = new Error("Invalid image URL");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (parsedUrl.protocol !== "https:") {
+            const error = new Error(
+                "Image URL must use HTTPS"
+            );
+            error.statusCode = 400;
+            throw error;
+        }
+
+        // Allow only trusted image hosts.
+        // Add your approved image hosts here if needed.
+        const allowedHosts = [
+            "res.cloudinary.com",
+            "images.unsplash.com",
+        ];
+
+        if (!allowedHosts.includes(parsedUrl.hostname)) {
+            const error = new Error(
+                "Image host is not allowed"
+            );
+            error.statusCode = 400;
+            throw error;
+        }
+
+        image = {
+            url: parsedUrl.toString(),
+            public_id: "",
+        };
+    }
+
+    // An image is required
+    else {
+        const error = new Error(
+            "Upload an image file or provide imageUrl"
+        );
         error.statusCode = 400;
         throw error;
     }
 
-    // Upload image
-    const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "E-commerce-products",
-    });
-
+    // Save product in MongoDB
     const product = await Product.create({
         title: title.trim(),
         description: description.trim(),
-        price,
+        price: Number(price),
         category: category.trim(),
-        stock,
-        image: {
-            url: result.secure_url,
-            public_id: result.public_id,
-        },
+        stock: Number(stock),
+        image,
         createdBy: req.user._id,
     });
 
@@ -88,7 +151,7 @@ const getProducts = asyncHandler(async (req, res) => {
 
     if (category) {
         query.category = {
-            $regex: category,
+            $regex: `^${category.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
             $options: "i",
         };
     }
