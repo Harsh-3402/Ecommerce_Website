@@ -12,11 +12,14 @@ const allowedOrigins = [
     process.env.CLIENT_URL
 ].filter(Boolean);
 
+console.log("Allowed Origins:", allowedOrigins);
+
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
+            console.log(`CORS blocked: ${origin}`);
             callback(new Error(`CORS blocked: ${origin}`));
         }
     },
