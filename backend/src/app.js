@@ -9,7 +9,8 @@ app = express();
 
 app.use(cors({
     origin: ["http://localhost:5173", 
-              "https://ecommerce-website-r55r.vercel.app"],
+              "https://ecommerce-website-r55r.vercel.app"
+            ],
     credentials: true
 })); // middleware to enable CORS
 app.use(express.json()); // middleware to parse JSON request bodies

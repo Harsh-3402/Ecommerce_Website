@@ -48,6 +48,10 @@ function Header() {
 
       setIsAuthenticated(Boolean(response.data.user));
     } catch (error) {
+      console.error(
+        "Authentication Error:",
+        error.response?.data || error.message,
+      );
       setIsAuthenticated(false);
     } finally {
       setIsCheckingAuth(false);
@@ -101,7 +105,7 @@ function Header() {
     } catch (error) {
       setLogoutError(
         error.response?.data?.message ||
-          "We couldn't log you out. Please try again."
+          "We couldn't log you out. Please try again.",
       );
     } finally {
       setIsLoggingOut(false);
@@ -184,10 +188,7 @@ function Header() {
                 onSubmit={handleSearch}
                 className="hidden w-44 items-center gap-2 rounded-full bg-[#f1f0ed] px-4 py-2.5 md:flex xl:w-52"
               >
-                <Search
-                  size={17}
-                  className="shrink-0 text-[#68716c]"
-                />
+                <Search size={17} className="shrink-0 text-[#68716c]" />
 
                 <input
                   type="search"
@@ -394,8 +395,8 @@ function Header() {
                   id="logout-description"
                   className="mx-auto mt-3 max-w-sm text-sm leading-6 text-[#69736c]"
                 >
-                  Are you sure you want to log out? You can always come back
-                  and continue shopping whenever you're ready.
+                  Are you sure you want to log out? You can always come back and
+                  continue shopping whenever you're ready.
                 </p>
               </div>
 
@@ -424,10 +425,7 @@ function Header() {
                   role="alert"
                   className="mt-4 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-left text-sm text-red-700"
                 >
-                  <AlertCircle
-                    size={18}
-                    className="mt-0.5 shrink-0"
-                  />
+                  <AlertCircle size={18} className="mt-0.5 shrink-0" />
 
                   <p>{logoutError}</p>
                 </div>
@@ -454,10 +452,7 @@ function Header() {
                 >
                   {isLoggingOut ? (
                     <>
-                      <LoaderCircle
-                        size={17}
-                        className="animate-spin"
-                      />
+                      <LoaderCircle size={17} className="animate-spin" />
                       Logging Out...
                     </>
                   ) : (

@@ -9,6 +9,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
+    console.log(req.cookies.token);
     const error = new Error("Not authorized, token missing");
     error.statusCode = 401;
     throw error;

@@ -67,46 +67,33 @@ const loginController = asyncHandler(async (req, res) => {
     const email = req.body.email?.trim().toLowerCase();
     const password = req.body.password;
 
-    // Required fields
     if (!email || !password) {
         const error = new Error("Email and password are required");
         error.statusCode = 400;
         throw error;
     }
 
-    // Find user
     const user = await User.findOne({ email });
 
-    if (!user) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
         const error = new Error("Invalid email or password");
         error.statusCode = 401;
         throw error;
     }
 
-    // Compare password
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-        const error = new Error("Invalid email or password");
-        error.statusCode = 401;
-        throw error;
-    }
-
-    // Generate JWT
     const token = generateToken(user._id);
-
-    // Save token in cookie
-    res.cookie("token", token, {
+    const cookieOptions = {
         httpOnly: true,
-        secure: false, // Change to true in production (HTTPS)
-        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 24 * 60 * 60 * 1000,
-    });
+    };
+
+    res.cookie("token", token, cookieOptions);
 
     res.status(200).json({
         success: true,
         message: "Login successful",
-        token,
         user: {
             _id: user._id,
             name: user.name,
@@ -115,13 +102,19 @@ const loginController = asyncHandler(async (req, res) => {
     });
 });
 
+const getCurrentUserController = asyncHandler(async (req, res) => {
+    res.status(200).json({
+        success: true,
+        user: req.user,
+    });
+});
 
 // Logout User
 const logoutController = asyncHandler(async (req, res) => {
     res.clearCookie("token", {
         httpOnly: true,
         secure: false,
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
     res.status(200).json({
@@ -130,17 +123,11 @@ const logoutController = asyncHandler(async (req, res) => {
     });
 });
 
-const getCurrentUserController = asyncHandler(async (req, res) => {
-  res.status(200).json({
-    success: true,
-    user: req.user,
-  });
-});
 
 
 module.exports = {
     registerController,
     loginController,
     logoutController,
-  getCurrentUserController,
+    getCurrentUserController,
 };
