@@ -5,16 +5,27 @@ const authRoutes = require('./routes/authRoutes');
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
-app = express();
+const app = express();
+
+const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.CLIENT_URL
+].filter(Boolean);
 
 app.use(cors({
-    origin: ["http://localhost:5173", 
-              "https://ecommerce-website-r55r.vercel.app"
-            ],
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`CORS blocked: ${origin}`));
+        }
+    },
     credentials: true
-})); // middleware to enable CORS
-app.use(express.json()); // middleware to parse JSON request bodies
-app.use(cookieParser()); // middleware to parse cookies
+}));
+
+app.use(express.json());
+app.use(cookieParser());
+
 // Routes
 app.use('/api/auth', authRoutes); // Use the auth routes
 
